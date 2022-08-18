@@ -4,6 +4,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import study.datajpa.entity.Member;
 
 import java.util.List;
@@ -82,5 +86,41 @@ class MemberRepositoryTest {
             System.out.println("s = " + s);
         }
 
+    }
+
+    @Test
+    public void returnType(){
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> findMembers = memberRepository.findListByUsername("AAA"); //설령 찾는게 없대도 LIST가 null이 아님이 보장됨
+
+        Member findMember = memberRepository.findMemberByUsername("BBB"); //단건 조회는 없으면 null
+
+
+    }
+
+    @Test
+    public void paging(){
+        //given
+        memberRepository.save(new Member("member1",10));
+        memberRepository.save(new Member("member2",10));
+        memberRepository.save(new Member("member3",10));
+        memberRepository.save(new Member("member4",10));
+        memberRepository.save(new Member("member5",10));
+
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+        int age=10;
+        //when
+        Slice<Member> members = memberRepository.findByage(age,pageRequest); //내가 요청한 사이즈보다 하나 더 요청
+
+
+        //then
+        List<Member> content = members.getContent();
+//       long totalElements = members.getTotalElements();
+
+        assertThat(content.size()).isEqualTo(3);
     }
 }
