@@ -165,4 +165,21 @@ class MemberRepositoryTest {
             System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    public void queryHint(){
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush(); //DB에 적용하기는 하는데 JPA 영속성 컨텍스트에는 아직 데이터 남아있음(1차캐시 존재)
+        em.clear(); //1차캐시를 날려먹음
+
+        //when
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2");
+        em.flush();
+    }
+
+    @Test
+    public void callCustom(){
+        List<Member> result = memberRepository.findMembertCustom();
+    }
 }
