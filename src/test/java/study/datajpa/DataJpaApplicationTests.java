@@ -10,4 +10,5 @@ class DataJpaApplicationTests {
 	void contextLoads() {
 	}
 
+
 }

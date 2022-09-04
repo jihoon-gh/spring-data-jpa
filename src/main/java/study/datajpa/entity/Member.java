@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of={"id","username","age"}) //연관관계 필드는 가급적이면 ToString 하지 말자
-public class Member {
+public class Member extends BaseEntity { //진짜 상속과 @Mapped 상속
 
     @Id @GeneratedValue
     @Column(name = "member_id")
